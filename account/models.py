@@ -7,6 +7,8 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
+from organization.models import Organization
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
@@ -47,6 +49,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    organization = models.ForeignKey(
+        Organization, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     is_deleted = models.BooleanField(default=False)
 
@@ -57,11 +62,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def organization_id(self):
-        return (
-            self.user_organization.first().id
-            if self.user_organization.first()
-            else None
-        )
+        return self.organization.id or None
 
     def __str__(self):
 

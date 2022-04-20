@@ -57,7 +57,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create(email=validated_data["email"])
         if org := Organization.objects.filter(name=validated_data["organization"]):
-            org.first().users.add(user)
+            user.organization = org.first()
         user.set_password(validated_data["password"])
         user.save()
         return user
