@@ -1,0 +1,12 @@
+.DS_Store
+.idea
+.vscode
+*.iml
+
+*_cache
+.venv
+__pycache__
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+*.sqlite3
