@@ -51,9 +51,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
         return attrs
 
-    def update(self, validated_data):
-        return User.objects.update(**validated_data)
-
     def create(self, validated_data):
         user = User.objects.create(email=validated_data["email"])
         if org := Organization.objects.filter(name=validated_data["organization"]):
