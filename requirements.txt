@@ -14,6 +14,7 @@ conda==4.12.0
 conda-content-trust @ file:///tmp/build/80754af9/conda-content-trust_1617045594566/work
 conda-package-handling @ file:///tmp/build/80754af9/conda-package-handling_1618262147379/work
 cryptography @ file:///tmp/build/80754af9/cryptography_1639414572950/work
+decouple==0.0.7
 distlib==0.3.4
 Django==4.0.4
 django-cors-headers==3.11.0
@@ -54,6 +55,7 @@ pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycosat==0.6.3
 pycparser @ file:///tmp/build/80754af9/pycparser_1636541352034/work
+pyenchant==3.2.2
 PyJWT==2.3.0
 pyOpenSSL @ file:///tmp/build/80754af9/pyopenssl_1635333100036/work
 PySocks @ file:///tmp/build/80754af9/pysocks_1605305812635/work
