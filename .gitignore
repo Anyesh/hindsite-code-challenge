@@ -11,3 +11,4 @@ __pycache__
 !**/migrations/__init__.py
 *.sqlite3
 *.env
+settings_local.py
