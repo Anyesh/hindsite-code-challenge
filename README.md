@@ -2,6 +2,14 @@
 
 ## Run the application locally
 
+```
+sudo make start
+```
+
+And that's all you have to do. You can check if app is running on `http://localhost`.
+
+## Run manually
+
 1. Create an .env file amd put it in the root dir
 
 ```
