@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.contrib.auth import logout as django_logout
 from django.utils.decorators import method_decorator
@@ -13,15 +11,10 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from account.api.serializers import (
-    ProfileSerializer,
-    UserRegisterSerializer,
-    UserSerializer,
-)
+from account.api.serializers import ProfileSerializer, UserRegisterSerializer
 from account.models import User
-from helpers.api_error_response import error_response
-from helpers.error_messages import INVALID_REQUEST
 from hindsite.utils import get_response
+from post.models import Post
 
 
 class Ping(APIView):
@@ -42,36 +35,10 @@ class Ping(APIView):
         )
 
 
-def token_response(token):
-    return json.loads('{"token": "' + str(token) + '"}')
-
-
 class Register(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = UserRegisterSerializer
-
-
-@api_view(["PUT"])
-def edit_profile(request):
-
-    try:
-        user_object = User.objects.get(id=request.user.id)
-        user_object.first_name = request.data["first_name"]
-        user_object.last_name = request.data["last_name"]
-        user_object.save()
-
-        return Response(
-            data={
-                **token_response(request.headers["Authorization"].split()[-1]),
-                **UserSerializer(user_object).data,
-            },
-            status=status.HTTP_200_OK,
-        )
-    except User.DoesNotExist:
-        return Response(
-            data=error_response(INVALID_REQUEST), status=status.HTTP_400_BAD_REQUEST
-        )
 
 
 class LogoutView(APIView):
@@ -97,9 +64,31 @@ class LogoutView(APIView):
         except Exception:
             pass
         django_logout(request)
-        response.delete_cookie(settings.JWT_AUTH_COOKIE)
-        response.delete_cookie(settings.JWT_AUTH_REFRESH_COOKIE)
+
         return response
 
     def post(self, request):
         return self.logout(request)
+
+
+@api_view(["POST"])
+def leave_organization(request):
+    if not request.user.organization_id:
+        return Response({"msg": "join the organization first"}, 401)
+    user = User.objects.get(id=request.user.id)
+    user.organization_id = None
+    Post.objects.filter(user_id=user, organization_id=user.organization_id).update(
+        is_deleted=True
+    )
+    user.save()
+    return Response({"msg": "organization left!"}, 200)
+
+
+@api_view(["POST"])
+def join_organization(request):
+    if request.user.organization_id:
+        return Response({"msg": "You are already in an organization"}, 401)
+    user = User.objects.get(id=request.user.id)
+    user.organization_id = request.data.get("organization_id")
+    user.save()
+    return Response({"msg": "organization Joined!"}, 200)
