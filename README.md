@@ -1,4 +1,4 @@
-# Hinsite Ind- Coding Challenge by Anish Shrestha
+# Hindsite Ind- Coding Challenge by Anish Shrestha
 
 ## Run the application locally
 
