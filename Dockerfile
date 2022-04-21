@@ -1,9 +1,10 @@
 FROM python:3.9
 
-WORKDIR /app
-COPY ./requirements.txt /app/requirements.txt
+ENV APP_HOME /app
+WORKDIR $APP_HOME
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-ADD . /app
+COPY . ./
 
 CMD gunicorn --bind :$PORT hindsite.wsgi:application
